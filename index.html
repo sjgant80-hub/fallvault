@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fallvault · sovereign emergency backup · ◊·κ=1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Sovereign emergency backup. One HTML file. AES-256-GCM in your browser. Your passphrase never leaves your machine. MIT.">
+<style>
+:root{--ox:#8b1a1a;--ox-dim:#5a1010;--brass:#b8974a;--brass-dim:#7a6228;--cream:#c4bfb2;--cream-dim:#7d7a72;--void:#0b0a0f;--void-2:#14121a;--void-3:#1e1b25;--green:#4caf50;--red:#e53935}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void);color:var(--cream);font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-size:14px;line-height:1.65;min-height:100vh}
+body{background-image:radial-gradient(at 0% 0%,rgba(139,26,26,.08),transparent 50%),radial-gradient(at 100% 100%,rgba(184,151,74,.05),transparent 50%)}
+a{color:var(--brass);text-decoration:none;border-bottom:1px dotted var(--brass-dim)}
+a:hover{color:var(--cream);border-bottom-color:var(--cream)}
+.wrap{max-width:920px;margin:0 auto;padding:60px 32px 120px}
+header{margin-bottom:80px;border-bottom:1px solid var(--ox-dim);padding-bottom:32px}
+header h1{font-size:42px;font-weight:400;letter-spacing:6px;color:var(--cream);margin-bottom:14px}
+header h1 .s{color:var(--ox);font-size:48px}
+header h1 .k{color:var(--brass)}
+header .sub{color:var(--cream-dim);letter-spacing:2px;font-size:13px;margin-bottom:18px}
+header .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:var(--cream-dim);letter-spacing:1px}
+header .meta span{padding:3px 10px;border:1px solid var(--brass-dim);color:var(--brass)}
+section{margin-bottom:64px}
+h2{font-size:11px;letter-spacing:4px;color:var(--brass);text-transform:uppercase;margin-bottom:18px;border-bottom:1px solid var(--brass-dim);padding-bottom:6px}
+h3{font-size:14px;letter-spacing:2px;color:var(--cream);margin:24px 0 10px;text-transform:uppercase}
+p{margin-bottom:14px;color:var(--cream)}
+.lead{font-size:18px;line-height:1.7;color:var(--cream);margin-bottom:20px}
+.hook{font-size:14px;color:var(--cream-dim);font-style:italic;margin-bottom:32px;padding-left:18px;border-left:2px solid var(--brass)}
+ul{list-style:none;margin-bottom:18px}
+ul li{padding:4px 0;color:var(--cream);position:relative;padding-left:20px}
+ul li:before{content:"◊";position:absolute;left:0;color:var(--ox)}
+ul li.dim{color:var(--cream-dim)}
+ul li.dim:before{color:var(--cream-dim);content:"⊘"}
+table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:13px}
+table th,table td{text-align:left;padding:8px 12px;border:1px solid var(--void-3)}
+table th{background:var(--void-2);color:var(--brass);font-weight:400;letter-spacing:2px;font-size:11px;text-transform:uppercase}
+table td.bad{color:var(--cream-dim)}
+table td.good{color:var(--green)}
+table td.ox{color:var(--ox)}
+code,pre{font-family:inherit;background:var(--void-2);color:var(--brass);padding:2px 8px;border:1px solid var(--void-3)}
+pre{padding:14px 18px;margin:14px 0;overflow-x:auto;font-size:12px;line-height:1.7;border-left:2px solid var(--ox);background:var(--void-2);color:var(--cream)}
+pre code{background:none;border:none;padding:0;color:inherit}
+.btn{display:inline-block;padding:12px 22px;background:var(--ox);color:#fff;letter-spacing:3px;font-size:12px;border:1px solid var(--ox);cursor:pointer;font-family:inherit;border-bottom:none;text-transform:uppercase}
+.btn:hover{background:#a02020}
+.btn.dim{background:var(--void-2);color:var(--cream)}
+.btn.dim:hover{background:var(--void-3);color:var(--brass)}
+.cta{margin:32px 0;display:flex;gap:14px;flex-wrap:wrap}
+.demo{background:var(--void-2);border:1px solid var(--brass-dim);padding:24px;margin:24px 0}
+.demo h3{margin-top:0}
+.demo input[type=file],.demo input[type=password],.demo button{background:var(--void);color:var(--cream);border:1px solid var(--void-3);padding:10px 14px;font-family:inherit;font-size:13px;margin:6px 0;width:100%;cursor:pointer}
+.demo input[type=password]:focus{outline:1px solid var(--brass);border-color:var(--brass)}
+.demo .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.demo button.go{background:var(--ox);color:#fff;border-color:var(--ox);letter-spacing:2px}
+.demo button.go:hover{background:#a02020}
+.demo .status{margin-top:14px;font-size:11px;color:var(--cream-dim);min-height:18px;letter-spacing:1px}
+.demo .ok{color:var(--green)}
+.demo .err{color:var(--red)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--void-2);border:1px solid var(--void-3);border-left:2px solid var(--brass-dim);padding:18px}
+.card h4{color:var(--brass);font-size:12px;letter-spacing:2px;margin-bottom:8px}
+.card p{font-size:12px;color:var(--cream-dim);margin:0}
+.seal{margin-top:80px;text-align:center;color:var(--cream-dim);font-size:11px;letter-spacing:3px}
+.seal .s{color:var(--ox);font-size:18px}
+@media(max-width:680px){
+  .wrap{padding:40px 20px 80px}
+  header h1{font-size:30px;letter-spacing:3px}
+  .demo .row{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+<h1><span class="s">◊</span> fallvault <span class="k">·κ=1</span></h1>
+<div class="sub">SOVEREIGN EMERGENCY BACKUP · ONE HTML FILE</div>
+<div class="meta">
+  <span>AES-256-GCM</span>
+  <span>PBKDF2 · 200k</span>
+  <span>WebCrypto</span>
+  <span>MIT</span>
+  <span>NO CLOUD</span>
+  <span>NO RENT</span>
+</div>
+</header>
+
+<section>
+<p class="lead">Back up your laptop without trusting Dropbox, iCloud, or Backblaze with the keys to your data.</p>
+<p class="hook">"Your laptop blew up. Now you're paying $9/month to a company that can read every file you ever wrote, so you can recover them next time. fallvault is a single HTML file that puts you back in charge."</p>
+
+<p>fallvault walks any folder on your machine, embeds the files, encrypts the whole tree with <strong>your</strong> passphrase using AES-256-GCM (in your browser, via WebCrypto), then writes the result as a self-contained HTML file. Push the file to a private GitHub repo. Lose your laptop? Clone the repo on any machine, open the HTML, type your passphrase. Your files come back.</p>
+
+<p>GitHub can't read it. Anthropic can't read it. The CIA can't read it (within polynomial time). Only your passphrase opens the vault.</p>
+</section>
+
+<section>
+<h2>The honest comparison</h2>
+<table>
+<thead><tr><th>Provider</th><th>Monthly cost</th><th>Can read your files?</th><th>You own the tool?</th></tr></thead>
+<tbody>
+<tr><td>Dropbox 2TB</td><td class="bad">$12 / mo</td><td class="ox">Yes (TOS §3.3)</td><td class="bad">No</td></tr>
+<tr><td>iCloud 2TB</td><td class="bad">$10 / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
+<tr><td>Backblaze</td><td class="bad">$9 / mo</td><td class="ox">Yes (server-side enc)</td><td class="bad">No</td></tr>
+<tr><td>Carbonite</td><td class="bad">$9 / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
+<tr><td><strong>fallvault</strong></td><td class="good">£0 forever</td><td class="good">No (client-side AES)</td><td class="good">Yes (MIT · fork it)</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<h2>How it works · 30 seconds</h2>
+<div class="grid3">
+<div class="card"><h4>1 · WALK</h4><p>Tree-walks your folder. Auto-skips git repos, node_modules, media, binaries. Pure source / configs / notes.</p></div>
+<div class="card"><h4>2 · ENCRYPT</h4><p>AES-256-GCM with PBKDF2-derived key (200k iterations · SHA-256). Random salt + IV per chunk.</p></div>
+<div class="card"><h4>3 · CHUNK</h4><p>Splits into 90MB sovereign HTML files. Push to private GitHub. Restore anywhere.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Try it · encrypt a file in your browser right now</h2>
+<div class="demo">
+<h3>◊ live AES-256-GCM demo</h3>
+<p style="font-size:12px;color:var(--cream-dim)">Pick a small file, set a passphrase, watch the encryption happen client-side. Nothing leaves your machine — verify in Network tab.</p>
+<div class="row">
+  <input type="file" id="demoFile">
+  <input type="password" id="demoPass" placeholder="passphrase · 8+ chars">
+</div>
+<div class="row">
+  <button class="go" id="encBtn">ENCRYPT ◊</button>
+  <button class="dim" id="decBtn">DECRYPT (paste base64) ◊</button>
+</div>
+<div class="status" id="demoStatus">awaiting file…</div>
+<textarea id="demoOut" style="width:100%;min-height:80px;margin-top:10px;background:var(--void);color:var(--brass);border:1px solid var(--void-3);padding:10px;font-family:inherit;font-size:11px;display:none" readonly></textarea>
+</div>
+</section>
+
+<section>
+<h2>Install · 60 seconds</h2>
+<pre><code># 1. clone
+gh repo clone sjgant80-hub/fallvault
+cd fallvault
+
+# 2. set passphrase (PowerShell)
+$env:FALLVAULT_PASS = "your-strong-passphrase-write-it-down"
+
+# 3. vault a folder
+node fallvault.mjs C:\Users\you\Downloads
+
+# 4. push the encrypted output to a PRIVATE github repo
+cd fallvault-out
+gh repo create your-user/fallvault-private --private --source=. --push</code></pre>
+
+<p>That's it. From now on, anytime you want a fresh backup, run step 3 + 4 again. Schedule it nightly via Task Scheduler / cron if you want.</p>
+</section>
+
+<section>
+<h2>The sovereign pattern · code public · data private</h2>
+<ul>
+<li>fallvault (this repo · public · MIT) is the <strong>tool</strong>. Anyone can fork it, audit the encryption, run it on their own files.</li>
+<li>Your-username/fallvault-private (your repo · private) holds your <strong>encrypted vaults</strong>. Only your passphrase decrypts them.</li>
+<li>If GitHub closes your account, the local vault HTML still works from a USB stick.</li>
+<li>If you forget your passphrase, the vault is unrecoverable — that's the trade. Pick a strong one. Write it on paper.</li>
+</ul>
+</section>
+
+<section>
+<h2>What gets backed up · what doesn't</h2>
+<ul>
+<li>Source code · configs · notes · markdown · text files · scripts · small data files</li>
+<li>Any file under 5MB by default (configurable)</li>
+<li class="dim">node_modules, .git, AppData, build/dist/cache folders</li>
+<li class="dim">Images, video, audio, zips, exes (re-downloadable or in cloud already)</li>
+<li class="dim">Folders that already have a .git inside (already on GitHub — no point doubling up)</li>
+</ul>
+<p>Customize via env vars: <code>FALLVAULT_SKIP</code>, <code>FALLVAULT_MAX_FILE</code>, <code>FALLVAULT_MAX_CHUNK</code>, <code>FALLVAULT_SKIP_GIT</code>.</p>
+</section>
+
+<section>
+<h2>FAQ · the operator's questions</h2>
+
+<h3>Is the encryption actually strong?</h3>
+<p>AES-256-GCM is the modern gold standard. PBKDF2-SHA256 with 200,000 iterations meets OWASP 2023 guidance. Salt and IV are 16/12 bytes random per chunk. Auth tag is 16 bytes. The bottleneck is your passphrase — pick 5+ words or a long sentence.</p>
+
+<h3>Can I lose my passphrase and get my data back?</h3>
+<p>No. By design. That's what makes it sovereign. <strong>Write your passphrase on paper. Put the paper in a safe.</strong></p>
+
+<h3>Can I run this on macOS / Linux?</h3>
+<p>Yes — Node 18+. The PowerShell commands above translate directly to bash (<code>export FALLVAULT_PASS="..."</code>).</p>
+
+<h3>Why HTML instead of a CLI binary?</h3>
+<p>So you can restore from <em>any</em> device, ever, even if Node isn't installed. Phone, library kiosk, friend's laptop. Open the HTML in any modern browser. WebCrypto does the work.</p>
+
+<h3>Will it back up my 4K video collection?</h3>
+<p>No — by default it skips images/video/binaries because the use case is "if my laptop dies, can I rebuild my work." Configure <code>FALLVAULT_MAX_FILE</code> if you want bigger files included.</p>
+
+<h3>Is this part of a wider system?</h3>
+<p>Yes. fallvault is one of <a href="https://www.ai-nativesolutions.com">60+ sovereign tools</a> in the AI Native Solutions estate. Same philosophy: single HTML files, you own them outright, no SaaS rent.</p>
+</section>
+
+<section>
+<h2>Roadmap</h2>
+<ul>
+<li>v1.0 · single-file encrypted HTML · CLI · MIT  <span style="color:var(--green)">← here</span></li>
+<li>v1.1 · in-browser zip download (restore-all)</li>
+<li>v1.2 · scheduled diff backups (only changed files since last vault)</li>
+<li>v1.3 · Ed25519-signed manifest (Konomi pattern · prove authenticity)</li>
+<li>v2.0 · browser-native vault creation (drag folder into HTML, no CLI needed)</li>
+</ul>
+</section>
+
+<section>
+<h2>License · sovereignty notice</h2>
+<p>MIT licensed. Fork it, sell it, white-label it, modify it. The tool is yours.</p>
+<p>Built by <a href="https://www.ai-nativesolutions.com">AI Native Solutions</a>. Part of the sovereign estate. <a href="https://github.com/sjgant80-hub/fallvault">Source on GitHub</a>.</p>
+</section>
+
+<div class="cta">
+  <a class="btn" href="https://github.com/sjgant80-hub/fallvault">VIEW ON GITHUB</a>
+  <a class="btn dim" href="https://www.ai-nativesolutions.com">THE FULL ESTATE</a>
+</div>
+
+<div class="seal"><span class="s">◊·κ=1</span> &nbsp; prime 379 &nbsp; v20.1 · φ=1.618 · κ=0.618 &nbsp; phi is home</div>
+
+</div>
+
+<script>
+// ─────────── live demo: encrypt a file with AES-256-GCM (WebCrypto) ───────────
+const $ = s => document.querySelector(s);
+let lastEncrypted = null;
+let lastFileName = '';
+
+async function deriveKey(pass, salt){
+  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return await crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt, iterations:200000, hash:'SHA-256' },
+    km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
+  );
+}
+
+$('#encBtn').onclick = async () => {
+  const f = $('#demoFile').files[0];
+  const pass = $('#demoPass').value;
+  if (!f) { setStatus('pick a file first','err'); return; }
+  if (pass.length < 8) { setStatus('passphrase must be 8+ chars','err'); return; }
+  setStatus('reading file…');
+  const buf = await f.arrayBuffer();
+  setStatus('deriving key (200k PBKDF2 iterations · ~1s)…');
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pass, salt);
+  setStatus('encrypting AES-256-GCM…');
+  const enc = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, buf);
+  const pkg = {
+    file: f.name,
+    size: f.size,
+    salt: bufToB64(salt),
+    iv: bufToB64(iv),
+    enc: bufToB64(enc),
+    kdf: 'pbkdf2-sha256-200k',
+    cipher: 'aes-256-gcm',
+  };
+  lastEncrypted = pkg;
+  lastFileName = f.name;
+  $('#demoOut').style.display = 'block';
+  $('#demoOut').value = JSON.stringify(pkg, null, 2);
+  setStatus('✓ encrypted · ' + f.size + ' bytes → ' + pkg.enc.length + ' base64 chars · nothing left your machine','ok');
+};
+
+$('#decBtn').onclick = async () => {
+  const pass = $('#demoPass').value;
+  let raw = $('#demoOut').value.trim();
+  if (!raw) {
+    raw = prompt('Paste the encrypted JSON package here:');
+    if (!raw) return;
+  }
+  let pkg;
+  try { pkg = JSON.parse(raw); } catch (e) { setStatus('not valid JSON','err'); return; }
+  setStatus('deriving key…');
+  try {
+    const salt = b64ToBuf(pkg.salt);
+    const iv = b64ToBuf(pkg.iv);
+    const enc = b64ToBuf(pkg.enc);
+    const key = await deriveKey(pass, salt);
+    setStatus('decrypting…');
+    const plain = await crypto.subtle.decrypt({ name:'AES-GCM', iv }, key, enc);
+    const blob = new Blob([plain]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = pkg.file || 'decrypted.bin'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    setStatus('✓ decrypted · file downloading · roundtrip verified','ok');
+  } catch (e) {
+    setStatus('wrong passphrase · or corrupted package','err');
+  }
+};
+
+function setStatus(msg, cls){
+  const el = $('#demoStatus');
+  el.textContent = msg;
+  el.className = 'status ' + (cls || '');
+}
+function bufToB64(b){ const arr = b instanceof ArrayBuffer ? new Uint8Array(b) : b; let s=''; for (const x of arr) s += String.fromCharCode(x); return btoa(s); }
+function b64ToBuf(s){ return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+</script>
+</body>
+</html>

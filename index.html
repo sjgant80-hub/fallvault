@@ -111,22 +111,19 @@ pre code{background:none;border:none;padding:0;color:inherit}
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
-  };
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
-  };
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null },
-  };
+    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -193,8 +190,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens,
-      });
+        max_tokens: maxTokens});
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -211,8 +207,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -221,8 +216,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -231,8 +225,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
-      });
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -473,8 +466,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE,
-  };
+    state: STATE};
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -558,7 +550,7 @@ pre code{background:none;border:none;padding:0;color:inherit}
 
 <section>
 <p class="lead">Back up your laptop without trusting Dropbox, iCloud, or Backblaze with the keys to your data.</p>
-<p class="hook">"Your laptop blew up. Now you're paying $9/month to a company that can read every file you ever wrote, so you can recover them next time. fallvault is a single HTML file that puts you back in charge."</p>
+<p class="hook">"Your laptop blew up. Now you're paying TBAnth to a company that can read every file you ever wrote, so you can recover them next time. fallvault is a single HTML file that puts you back in charge."</p>
 
 <p>fallvault walks any folder on your machine, embeds the files, encrypts the whole tree with <strong>your</strong> passphrase using AES-256-GCM (in your browser, via WebCrypto), then writes the result as a self-contained HTML file. Push the file to a private GitHub repo. Lose your laptop? Clone the repo on any machine, open the HTML, type your passphrase. Your files come back.</p>
 
@@ -570,11 +562,11 @@ pre code{background:none;border:none;padding:0;color:inherit}
 <table>
 <thead><tr><th>Provider</th><th>Monthly cost</th><th>Can read your files?</th><th>You own the tool?</th></tr></thead>
 <tbody>
-<tr><td>Dropbox 2TB</td><td class="bad">$12 / mo</td><td class="ox">Yes (TOS §3.3)</td><td class="bad">No</td></tr>
-<tr><td>iCloud 2TB</td><td class="bad">$10 / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
-<tr><td>Backblaze</td><td class="bad">$9 / mo</td><td class="ox">Yes (server-side enc)</td><td class="bad">No</td></tr>
-<tr><td>Carbonite</td><td class="bad">$9 / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
-<tr><td><strong>fallvault</strong></td><td class="good">£0 forever</td><td class="good">No (client-side AES)</td><td class="good">Yes (MIT · fork it)</td></tr>
+<tr><td>Dropbox 2TB</td><td class="bad">TBA / mo</td><td class="ox">Yes (TOS §3.3)</td><td class="bad">No</td></tr>
+<tr><td>iCloud 2TB</td><td class="bad">TBA / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
+<tr><td>Backblaze</td><td class="bad">TBA / mo</td><td class="ox">Yes (server-side enc)</td><td class="bad">No</td></tr>
+<tr><td>Carbonite</td><td class="bad">TBA / mo</td><td class="ox">Yes</td><td class="bad">No</td></tr>
+<tr><td><strong>fallvault</strong></td><td class="good">TBA forever</td><td class="good">No (client-side AES)</td><td class="good">Yes (MIT · fork it)</td></tr>
 </tbody>
 </table>
 </section>
@@ -729,8 +721,7 @@ $('#encBtn').onclick = async () => {
     iv: bufToB64(iv),
     enc: bufToB64(enc),
     kdf: 'pbkdf2-sha256-200k',
-    cipher: 'aes-256-gcm',
-  };
+    cipher: 'aes-256-gcm'};
   lastEncrypted = pkg;
   lastFileName = f.name;
   $('#demoOut').style.display = 'block';

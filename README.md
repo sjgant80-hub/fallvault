@@ -10,16 +10,16 @@ Stop paying SaaS rent on a file viewer.
 
 ## The pitch
 
-You back up your laptop. It dies. Cloud-X reads every file you ever wrote, charges you $10/month forever, and you hope they're trustworthy.
+You back up your laptop. It dies. Cloud-X reads every file you ever wrote, charges you TBAnth forever, and you hope they're trustworthy.
 
 fallvault replaces all of that with a single HTML file.
 
 ```
-Dropbox 2TB     $12/mo  · reads your files
-iCloud 2TB      $10/mo  · reads your files
-Backblaze       $9/mo   · reads your files
+Dropbox 2TB     TBA  · reads your files
+iCloud 2TB      TBA  · reads your files
+Backblaze       TBA   · reads your files
 ─────────────────────────────────────────────
-fallvault       $0      · WebCrypto AES-256 · only you decrypt · MIT
+fallvault       TBA      · WebCrypto AES-256 · only you decrypt · MIT
 ```
 
 ---

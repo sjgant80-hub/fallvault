@@ -4,7 +4,7 @@
 
 Stop paying SaaS rent on a file viewer.
 
-[**Live landing**](https://sjgant80-hub.github.io/fallvault/) · [Source](./fallvault.mjs) · MIT · Part of [AI Native Solutions](https://www.ai-nativesolutions.com) · ◊·κ=1
+[**Live landing**](https://sjgant80-hub.github.io/fallvault/) · [Source](./fallvault.mjs) · MIT · Part of [AI Native Solutions](https://www.ai-nativesolutions.com)
 
 ---
 
@@ -166,4 +166,4 @@ MIT. Fork it, sell it, white-label it.
 
 Built by [AI Native Solutions](https://www.ai-nativesolutions.com). Part of the sovereign estate of 60+ tools. Same philosophy: single HTML files, you own them outright, no SaaS rent.
 
-◊·κ=1 · prime 379 · v20.1 · φ=1.618 · κ=0.618 · phi is home
+v20.1
